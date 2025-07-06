@@ -180,6 +180,7 @@ import cn.wildfirechat.model.FriendRequest;
 import cn.wildfirechat.model.GroupInfo;
 import cn.wildfirechat.model.GroupMember;
 import cn.wildfirechat.model.GroupSearchResult;
+import cn.wildfirechat.model.MessageCountsPerDay;
 import cn.wildfirechat.model.ModifyChannelInfoType;
 import cn.wildfirechat.model.ModifyGroupInfoType;
 import cn.wildfirechat.model.ModifyMyInfoEntry;
@@ -3691,6 +3692,30 @@ public class ChatManager {
         } catch (RemoteException e) {
             e.printStackTrace();
             mainHandler.post(() -> callback.onFail(ErrorCode.SERVICE_EXCEPTION));
+        }
+    }
+
+    /**
+     * 获取每天的消息数量。一般用于日历查看消息，在日历上显示每天是否有消息。
+     * 后续如果查看某天的消息内容，可以计算出这天的开始和结束时间（毫秒），然后使用根据时间获取消息的接口来加载消息。
+     *
+     * @param conversation 会话
+     * @param contentTypes      消息类型
+     * @param startTime    开始时间，单位毫秒
+     * @param endTime      结束时间，单位毫秒
+     *
+     * @return 每天的消息数量。
+     */
+    public MessageCountsPerDay getMessageCountByDay(Conversation conversation, List<Integer> contentTypes, long startTime, long endTime) {
+        if (!checkRemoteService()) {
+            return null;
+        }
+
+        try {
+            return mClient.getMessageCountByDay(conversation, convertIntegers(contentTypes), startTime, endTime);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

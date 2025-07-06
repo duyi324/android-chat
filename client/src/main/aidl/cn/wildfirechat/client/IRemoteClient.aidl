@@ -48,6 +48,7 @@ import cn.wildfirechat.client.IOnSecretMessageBurnStateListener;
 import cn.wildfirechat.message.Message;
 import cn.wildfirechat.message.core.MessagePayload;
 import cn.wildfirechat.model.UnreadCount;
+import cn.wildfirechat.model.MessageCountsPerDay;
 
 import cn.wildfirechat.model.Conversation;
 import cn.wildfirechat.model.ConversationSearchResult;
@@ -130,6 +131,8 @@ interface IRemoteClient {
 
     oneway void getUserMessages(in String userId, in Conversation conversation, in long fromIndex, in boolean before, in int count, in IGetMessageCallback callback);
     oneway void getUserMessagesEx(in String userId, in int[] conversationTypes, in int[] lines, in int[] contentTypes, in long fromIndex, in boolean before, in int count, in IGetMessageCallback callback);
+
+    MessageCountsPerDay getMessageCountByDay(in Conversation conversation, in int[] messageStatus, in long fromTime, in long endTime);
 
     oneway void getRemoteMessages(in Conversation conversation, in int[] contentTypes, in long beforeMessageUid, in int count, in IGetRemoteMessagesCallback callback);
     oneway void getRemoteMessage(in long messageUid, in IGetRemoteMessagesCallback callback);

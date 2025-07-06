@@ -96,6 +96,7 @@ import cn.wildfirechat.model.FriendRequest;
 import cn.wildfirechat.model.GroupInfo;
 import cn.wildfirechat.model.GroupMember;
 import cn.wildfirechat.model.GroupSearchResult;
+import cn.wildfirechat.model.MessageCountsPerDay;
 import cn.wildfirechat.model.ModifyMyInfoEntry;
 import cn.wildfirechat.model.NullGroupMember;
 import cn.wildfirechat.model.NullUserInfo;
@@ -107,6 +108,7 @@ import cn.wildfirechat.model.ProtoChatRoomInfo;
 import cn.wildfirechat.model.ProtoChatRoomMembersInfo;
 import cn.wildfirechat.model.ProtoConversationInfo;
 import cn.wildfirechat.model.ProtoConversationSearchresult;
+import cn.wildfirechat.model.ProtoDayCounts;
 import cn.wildfirechat.model.ProtoDomainInfo;
 import cn.wildfirechat.model.ProtoFileRecord;
 import cn.wildfirechat.model.ProtoFriend;
@@ -998,6 +1000,16 @@ public class ClientService extends Service implements SdtLogic.ICallBack,
                     }
                 }
             });
+        }
+
+        @Override
+        public MessageCountsPerDay getMessageCountByDay(Conversation conversation, int[] messageStatus, long fromTime, long endTime) throws RemoteException {
+            ProtoDayCounts protoDayCounts = ProtoLogic.getMessageCountByDay(conversation.type.getValue(), conversation.target, conversation.line, messageStatus, fromTime, endTime);
+            MessageCountsPerDay dayCounts = new MessageCountsPerDay();
+            for (ProtoDayCounts.ProtoDayCount protoDC : protoDayCounts.dayCounts) {
+                dayCounts.add(protoDC.day, protoDC.count);
+            }
+            return dayCounts;
         }
 
         @Override
